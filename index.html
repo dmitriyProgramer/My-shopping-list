@@ -6,5 +6,32 @@
 </head>
 
 <body>Hi
+<script>
+function onInitFs(fs) {
+
+  fs.root.getFile('log.txt', {create: true}, function(fileEntry) {
+
+    fileEntry.createWriter(function(fileWriter) {
+
+      fileWriter.onwriteend = function(e) {
+        console.log('Write completed.');
+      };
+
+      fileWriter.onerror = function(e) {
+        console.log('Write failed: ' + e.toString());
+      };
+
+      var bb = new BlobBuilder();
+      bb.append('Ipsum Lorem');
+      fileWriter.write(bb.getBlob('text/plain'));
+
+    }, errorHandler);
+
+  }, errorHandler);
+
+}
+
+window.requestFileSystem(window.PERSISTENT, 1024*1024, onInitFs, errorHandler);
+</script>
 </body>
 </html>
