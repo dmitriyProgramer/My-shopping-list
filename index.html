@@ -9,22 +9,18 @@
 <script>
 function onInitFs(fs) {
 
-  fs.root.getFile('./dmitriyProgramer/My-shopping-list/blob/master/log.txt', {create: true}, function(fileEntry) {
+  fs.root.getFile('log.txt', {}, function(fileEntry) {
+    
+    fileEntry.file(function(file) {
+       var reader = new FileReader();
 
-    fileEntry.createWriter(function(fileWriter) {
+       reader.onloadend = function(e) {
+         var txtArea = document.createElement('textarea');
+         txtArea.value = this.result;
+         document.body.appendChild(txtArea);
+       };
 
-      fileWriter.onwriteend = function(e) {
-        console.log('Write completed.');
-      };
-
-      fileWriter.onerror = function(e) {
-        console.log('Write failed: ' + e.toString());
-      };
-
-      var bb = new BlobBuilder();
-      bb.append('Ipsum Lorem');
-      fileWriter.write(bb.getBlob('text/plain'));
-
+       reader.readAsText(file);
     }, errorHandler);
 
   }, errorHandler);
